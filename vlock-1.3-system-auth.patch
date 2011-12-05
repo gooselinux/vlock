@@ -1,0 +1,7 @@
+--- vlock-1.3/vlock.pamd.system-auth	2005-10-13 15:44:16.000000000 +0200
++++ vlock-1.3/vlock.pamd	2005-10-13 15:47:48.000000000 +0200
+@@ -1,2 +1,3 @@
+ #%PAM-1.0
+-auth       required	/lib/security/pam_pwdb.so shadow nullok
++auth       include      system-auth
++account    required     pam_permit.so

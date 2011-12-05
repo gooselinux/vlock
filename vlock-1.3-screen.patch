@@ -1,0 +1,21 @@
+--- vlock-1.3/vlock.c.screen	1999-01-14 01:19:14.000000000 +0100
++++ vlock-1.3/vlock.c	2005-10-14 13:51:16.000000000 +0200
+@@ -47,6 +47,7 @@
+   int option_index; /* Unused */
+   int c;
+   struct vt_mode vtm;
++  char *env;
+ 
+   /* First we parse all the command line arguments */
+   while ((c = getopt_long(argc, argv, "acvh",
+@@ -98,6 +99,10 @@
+     is_vt = 1;
+   }
+ 
++  if ((env = getenv("TERM")) && strcmp(env, "screen")==0 && getenv("STY"))
++	  fprintf(stderr, " *** WARNING: you're probably runnig screen(1). ***\n"
++			  " *** The screen locked by vlock is NOT safe.    ***\n\n");
++  
+   /* Now set the signals so we can't be summarily executed or stopped, */
+   /* and handle SIGUSR{1,2} and SIGCHLD */
+   mask_signals();

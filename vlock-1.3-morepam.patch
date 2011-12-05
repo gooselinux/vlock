@@ -1,0 +1,28 @@
+Check that the user is allowed to unlock the screen at this time.  Mmmm, yeah.
+Attempt to reinitialize credentials, as xscreensaver does.
+
+--- vlock-1.3/input.c	2005-08-02 20:23:06.206463656 -0400
++++ vlock-1.3/input.c	2005-08-02 20:23:00.557322456 -0400
+@@ -104,6 +104,12 @@
+   pam_error = pam_set_item(pamh, PAM_USER_PROMPT, strdup(prompt));
+   PAM_BAIL;
+   pam_error = pam_authenticate(pamh, 0);
++  if (pam_error == PAM_SUCCESS) {
++    pam_error = pam_acct_mgmt(pamh, 0);
++  }
++  if (pam_error == PAM_SUCCESS) {
++    pam_setcred(pamh, PAM_REINITIALIZE_CRED);
++  }
+   /* fix signals that may have been disordered by pam */
+   set_signal_mask(0);
+ #ifdef NO_ROOT_PASS
+@@ -117,6 +123,9 @@
+     pam_error = pam_set_item(pamh, PAM_USER, "root");
+     PAM_BAIL;
+     pam_error = pam_authenticate(pamh, 0);
++    if (pam_error == PAM_SUCCESS) {
++      pam_error = pam_acct_mgmt(pamh, 0);
++    }
+     /* fix signals that may have been disordered by pam */
+     set_signal_mask(0);
+     PAM_BAIL;
